@@ -1,7 +1,9 @@
 class Config:
-    # URL = 'https://www.safaribooksonline.com/library/view/strata-data-conference/9781491985373/'
-    URL = 'https://learning.oreilly.com/videos/machine-learning-on/9781838556075'
-    # DOMAIN = 'https://www.safaribooksonline.com'
+    URLS = [
+        'https://learning.oreilly.com/videos/ios-augmented-reality/9781788479332',
+        'https://learning.oreilly.com/videos/the-complete-arkit/9781789958775',
+        'https://learning.oreilly.com/videos/ios-12-and/100000006A0477/',
+        ]
     DOMAIN = ''
     OUTPUT_FOLDER = './Downloader'
     USERNAME = 'you@email.com'

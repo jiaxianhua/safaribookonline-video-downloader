@@ -12,7 +12,7 @@ import string
 import config
 
 class SafariDownloader:
-    def __init__(self, url, output_folder, username, password, domain='https://www.safaribooksonline.com', downloader_path='./youtube-dl.exe'):
+    def __init__(self, url, output_folder, username, password, domain, downloader_path):
         self.output_folder = output_folder
         self.username = username
         self.password = password
@@ -21,6 +21,7 @@ class SafariDownloader:
 
         req = requests.get(url)
         soup = BeautifulSoup(req.text, 'html.parser')
+        self.title = soup.find('h1').text
         self.topics = soup.find_all('li', class_='toc-level-1') # top-level topic titles
         # Update youtube-dl first
         subprocess.run([self.downloader_path, "-U"])
@@ -37,7 +38,7 @@ class SafariDownloader:
         for index, topic in enumerate(self.topics):
             topic_name = topic.a.text
             # Creating folder to put the videos in
-            save_folder = '{}/{:03d} - {}'.format(self.output_folder, index + 1, topic_name)
+            save_folder = '{}/{}/{:03d} - {}'.format(self.output_folder, self.title, index + 1, topic_name)
             os.makedirs(save_folder, exist_ok=True)
             # You can choose to skip these topic_name, comment these three lines if you do not want to skip any
             if topic_name in ('Keynotes', 'Strata Business Summit', 'Sponsored'):
@@ -53,12 +54,12 @@ class SafariDownloader:
                     print("File {} already exists! Skipping...".format(video_out))
                     continue
                 print("Downloading {} ...".format(video_name))
-                print(video_out)
                 subprocess.run([self.downloader_path, "-u", self.username, "-p", self.password, "--verbose", "--output", video_out, video_url])
 
 if __name__ == '__main__':
     app_config = config.Config
-    downloader = SafariDownloader(url=app_config.URL, output_folder=app_config.OUTPUT_FOLDER,
-                                  username=app_config.USERNAME, password=app_config.PASSWORD,
-                                  domain=app_config.DOMAIN, downloader_path=app_config.DOWNLOADER)
-    downloader.download()
+    for url in app_config.URLS:
+        downloader = SafariDownloader(url=url, output_folder=app_config.OUTPUT_FOLDER,
+                                      username=app_config.USERNAME, password=app_config.PASSWORD,
+                                      domain=app_config.DOMAIN, downloader_path=app_config.DOWNLOADER)
+        downloader.download()
