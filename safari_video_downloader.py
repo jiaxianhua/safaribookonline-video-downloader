@@ -38,7 +38,7 @@ class SafariDownloader:
         for index, topic in enumerate(self.topics):
             topic_name = topic.a.text
             # Creating folder to put the videos in
-            save_folder = '{}/{}/{:03d} - {}'.format(self.output_folder, self.title, index + 1, topic_name)
+            save_folder = '{}/{}/{-03d} - {}'.format(self.output_folder, self.title, index + 1, topic_name)
             os.makedirs(save_folder, exist_ok=True)
             # You can choose to skip these topic_name, comment these three lines if you do not want to skip any
             if topic_name in ('Keynotes', 'Strata Business Summit', 'Sponsored'):
